@@ -62,6 +62,7 @@ class GraphConvolution(Module):
         
     def forward(self, input_features, adj):  
         support = SparseMM.apply(input_features, self.weight)
+        adj=adj.to(torch.float32)
         output = SparseMM.apply(adj, support)
         
         if self.bias is not None:
@@ -108,8 +109,8 @@ class HCNH(nn.Module):
         
         """ recover hypergraph """
         h = torch.mm(x, y.t())
-        h = torch.sigmoid(h)
+        h2 = torch.sigmoid(h)
         
         output = F.log_softmax(x, dim=1)
         
-        return h, output, x, y
+        return h2, output, x, y
